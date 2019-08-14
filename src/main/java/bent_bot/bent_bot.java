@@ -66,7 +66,7 @@ public class bent_bot
                         category = command.getCategory();
                         helpEmbed.addField("category", category!=null ? "No Category" : category.getName(), false);
                     }
-                    helpEmbed.appendDescription("**"+client.build().getPrefix() + command.getName()+"**" + " — " + (command.getArguments()==null ? "" : "`"+ command.getArguments()+"`") + command.getHelp());
+                    helpEmbed.appendDescription("\n**"+client.build().getPrefix() + command.getName()+"**" + " — " + (command.getArguments()==null ? "" : "`"+ command.getArguments()+"`") + command.getHelp());
                 }
             }
             User owner = event.getJDA().getUserById(client.build().getOwnerId());

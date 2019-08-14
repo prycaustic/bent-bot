@@ -30,11 +30,12 @@ public class InfoCommand extends Command {
     @Override
     protected void execute(CommandEvent event)
     {
-
         Member targetMember = event.getMember();
 
         if (!event.getMessage().getMentionedMembers().isEmpty())
+        {
             targetMember = event.getEvent().getMessage().getMentionedMembers().get(0);
+        }
 
         EmbedBuilder infoEmbed = new EmbedBuilder()
                 .setColor(targetMember.getColor())
@@ -47,6 +48,9 @@ public class InfoCommand extends Command {
         infoEmbed.addField("Role Color", "#" + Integer.toHexString(targetMember.getColorRaw()).toUpperCase(), true);
         infoEmbed.addField("Account Created", getDateTimeString(targetMember.getTimeCreated()),false);
         infoEmbed.addField("Join Date", getDateTimeString(targetMember.getTimeJoined()),false);
+
+        if (targetMember.getTimeBoosted()!=null)
+            infoEmbed.addField("Boosting Since", getDateTimeString(targetMember.getTimeBoosted()), false);
 
         StringBuilder rolesBuilder = new StringBuilder();
 

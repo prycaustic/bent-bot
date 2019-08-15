@@ -1,5 +1,6 @@
 package bent_bot.commands;
 
+import bent_bot.bent_bot;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.doc.standard.CommandInfo;
@@ -30,45 +31,45 @@ public class InfoCommand extends Command {
     @Override
     protected void execute(CommandEvent event)
     {
-        Member targetMember = event.getMember();
+        //find a target
+        Member targetMember = bent_bot.getTargetMember(event);
 
-        if (!event.getMessage().getMentionedMembers().isEmpty())
+        if (targetMember != null)
         {
-            targetMember = event.getEvent().getMessage().getMentionedMembers().get(0);
-        }
+            EmbedBuilder infoEmbed = new EmbedBuilder()
+                    .setColor(targetMember.getColor())
+                    .setThumbnail(targetMember.getUser().getEffectiveAvatarUrl());
 
-        EmbedBuilder infoEmbed = new EmbedBuilder()
-                .setColor(targetMember.getColor())
-                .setThumbnail(targetMember.getUser().getEffectiveAvatarUrl());
+            infoEmbed.setTitle(targetMember.getUser().getName() + "#" + targetMember.getUser().getDiscriminator() + (targetMember.getNickname() != null ? " (" + targetMember.getEffectiveName() + ")" : " "));
+            infoEmbed.addField("ID", targetMember.getId(), true);
+            infoEmbed.addField("Shared Servers", String.valueOf(targetMember.getUser().getMutualGuilds().size()), true);
+            infoEmbed.addField("Status", String.valueOf(targetMember.getOnlineStatus()).replace("_", " "), true);
+            infoEmbed.addField("Name Color", "#" + Integer.toHexString(targetMember.getColorRaw()).toUpperCase(), true);
+            infoEmbed.addField("Account Created", getDateTimeString(targetMember.getTimeCreated()), false);
+            infoEmbed.addField("Join Date", getDateTimeString(targetMember.getTimeJoined()), false);
 
-        infoEmbed.setTitle(targetMember.getUser().getName()+"#"+targetMember.getUser().getDiscriminator() + (targetMember.getNickname()!=null ? " ("+targetMember.getEffectiveName()+")" : " "));
-        infoEmbed.addField("ID", targetMember.getId(), true);
-        infoEmbed.addField("Shared Servers", String.valueOf(targetMember.getUser().getMutualGuilds().size()), true);
-        infoEmbed.addField("Status", String.valueOf(targetMember.getOnlineStatus()).replace("_", " "), true);
-        infoEmbed.addField("Role Color", "#" + Integer.toHexString(targetMember.getColorRaw()).toUpperCase(), true);
-        infoEmbed.addField("Account Created", getDateTimeString(targetMember.getTimeCreated()),false);
-        infoEmbed.addField("Join Date", getDateTimeString(targetMember.getTimeJoined()),false);
+            if (targetMember.getTimeBoosted() != null)
+                infoEmbed.addField("Boosting Since", getDateTimeString(targetMember.getTimeBoosted()), false);
 
-        if (targetMember.getTimeBoosted()!=null)
-            infoEmbed.addField("Boosting Since", getDateTimeString(targetMember.getTimeBoosted()), false);
-
-        StringBuilder rolesBuilder = new StringBuilder();
-
-        for (int i = 0; i < targetMember.getRoles().size(); i++)
-        {
-            if (i > 0)
+            if (!targetMember.getRoles().isEmpty())
             {
-                rolesBuilder.append(", ");
+                StringBuilder rolesBuilder = new StringBuilder();
+
+                for (int i = 0; i < targetMember.getRoles().size(); i++)
+                {
+                    if (i > 0)
+                    {
+                        rolesBuilder.append(", ");
+                    }
+                    rolesBuilder.append(targetMember.getRoles().get(i).getName());
+                }
+
+                String roles = rolesBuilder.toString();
+
+                infoEmbed.addField("Roles " + "(" + targetMember.getRoles().size() + ")", roles, false);
             }
-            rolesBuilder.append(targetMember.getRoles().get(i).getName());
+
+            event.reply(infoEmbed.build());
         }
-
-        String roles = rolesBuilder.toString();
-
-        infoEmbed.addField("Roles " + "("+targetMember.getRoles().size()+")", roles, false);
-
-        //build the embed and try to send it
-        MessageEmbed builtInfoEmbed = infoEmbed.build();
-        event.reply(builtInfoEmbed);
     }
 }

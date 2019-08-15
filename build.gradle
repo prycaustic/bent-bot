@@ -7,7 +7,7 @@ plugins {
 mainClassName = 'bent_bot.bent_bot'
 
 group 'stronous'
-version '1.3-SNAPSHOT'
+version '0.4-SNAPSHOT'
 def jdaVersion = '4.0.0_39'
 
 sourceCompatibility = targetCompatibility = 8

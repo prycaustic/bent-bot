@@ -1,6 +1,7 @@
 package bent_bot;
 
 import bent_bot.commands.InfoCommand;
+import bent_bot.commands.PfpCommand;
 import bent_bot.commands.PingCommand;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
@@ -11,13 +12,13 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 
 import javax.security.auth.login.LoginException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class bent_bot
@@ -49,7 +50,7 @@ public class bent_bot
         client.setEmojis("✅", 	"⚠", 	"❌");
 
         //add commands
-        client.addCommands(new PingCommand(), new InfoCommand());
+        client.addCommands(new PingCommand(), new InfoCommand(), new PfpCommand());
 
         //create the help consumer
         Consumer<CommandEvent> helpConsumer = (event) -> {
@@ -133,5 +134,60 @@ public class bent_bot
         jda.shutdown();
         System.out.println("Shut down success...");
         System.exit(0);
+    }
+
+    public static Member searchGuildForMember(CommandEvent event)
+    {
+        //sort the list in alphabetical order
+        List<Member> guildMembers = new ArrayList<>();
+
+        for (Member i : event.getGuild().getMembers())
+            guildMembers.add(i);
+
+        Collections.sort(guildMembers, new Comparator<Member>() {
+            @Override
+            public int compare(Member o1, Member o2) {
+                return o1.getEffectiveName().compareToIgnoreCase(o2.getEffectiveName());
+            }
+        });
+
+        //trim the string down to just the first argument
+        String firstArg = event.getArgs().substring(event.getArgs().indexOf(" ") + 1, event.getArgs().length());
+
+        //go through every member in the guild
+        for (Member i : guildMembers)
+        {
+            if (i.getEffectiveName().indexOf(firstArg) != -1)
+                return i;
+        }
+        //check every member again but lower case
+        for (Member i : guildMembers)
+        {
+            if (i.getEffectiveName().indexOf(firstArg.toLowerCase()) != -1)
+                return i;
+        }
+        //nobody was found
+        return null;
+    }
+
+    public static Member getTargetMember(CommandEvent event)
+    {
+        //if they mentioned somebody then use them
+        if (!event.getMessage().getMentionedMembers().isEmpty())
+        {
+            return event.getEvent().getMessage().getMentionedMembers().get(0);
+        }
+        //if nobody is mentioned then see if they put in a search query
+        else if (!event.getArgs().isEmpty())
+        {
+            if (bent_bot.searchGuildForMember(event) != null)
+                return bent_bot.searchGuildForMember(event);
+            else
+                event.replyWarning("Nobody with that name could be found.");
+        }
+        //if there's no search just do the person who sent the commmand
+        else
+            return event.getMember();
+        return null;
     }
 }

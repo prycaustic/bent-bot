@@ -8,6 +8,7 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
+import com.jagrosh.jdautilities.examples.command.ShutdownCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -51,7 +52,7 @@ public class bent_bot
         client.setEmojis("✅", 	"⚠", 	"❌");
 
         //add commands
-        client.addCommands(new PingCommand(), new InfoCommand(), new PfpCommand());
+        client.addCommands(new PingCommand(), new InfoCommand(), new PfpCommand(), new ShutdownCommand());
 
         //create the help consumer
         Consumer<CommandEvent> helpConsumer = (event) -> {

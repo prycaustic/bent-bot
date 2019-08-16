@@ -59,6 +59,13 @@ public class ArabicCommand extends ListenerAdapter
             event.getChannel().sendTyping().queue();
             event.getChannel().sendMessage(arabicStr).queue();
         }
+
+        if (event.getMessage().getContentRaw().equals("my internet is back"))
+        {
+            //just absolutely own the retard who talks about his internet
+            event.getChannel().sendTyping().queue();
+            event.getChannel().sendMessage("nobody cares about your internet.").queue();
+        }
     }
 
     private static String[] shuffleArray(String[] array)

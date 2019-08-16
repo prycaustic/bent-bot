@@ -1,5 +1,6 @@
 package bent_bot;
 
+import bent_bot.commands.ArabicCommand;
 import bent_bot.commands.InfoCommand;
 import bent_bot.commands.PfpCommand;
 import bent_bot.commands.PingCommand;
@@ -103,7 +104,7 @@ public class bent_bot
             else
                 client.setActivity(Activity.playing("Please set a valid activity."));
 
-            jda.addEventListeners(waiter, client.build());
+            jda.addEventListeners(waiter, client.build(), new ArabicCommand());
             jda.build();
         }
         catch (LoginException e)
@@ -157,15 +158,26 @@ public class bent_bot
         //go through every member in the guild
         for (Member i : guildMembers)
         {
-            if (i.getEffectiveName().indexOf(firstArg) != -1)
+            //go through nicknames first
+            if (i.getEffectiveName().startsWith(firstArg))
+                return i;
+            else if (i.getEffectiveName().toLowerCase().startsWith(firstArg.toLowerCase()))
+                return i;
+            else if (i.getEffectiveName().contains(firstArg))
+                return i;
+            else if (i.getEffectiveName().toLowerCase().contains(firstArg.toLowerCase()))
+                return i;
+            //then check everyone's username
+            else if (i.getUser().getName().startsWith(firstArg))
+                return i;
+            else if (i.getUser().getName().toLowerCase().startsWith(firstArg.toLowerCase()))
+                return i;
+            else if (i.getUser().getName().contains(firstArg))
+                return i;
+            else if (i.getUser().getName().toLowerCase().contains(firstArg.toLowerCase()))
                 return i;
         }
-        //check every member again but lower case
-        for (Member i : guildMembers)
-        {
-            if (i.getEffectiveName().indexOf(firstArg.toLowerCase()) != -1)
-                return i;
-        }
+
         //nobody was found
         return null;
     }

@@ -20,10 +20,9 @@ import java.util.Random;
 @Author("Elon (stronous)")
 public class ArchillectCommand extends Command
 {
-    private int id = 0;
+    private int id = getLatestImageId();
 
-    public ArchillectCommand()
-    {
+    public ArchillectCommand() throws IOException {
         this.name = "ar";
         this.help = "returns the latest, a random archillect post, or one by id";
         this.arguments = "<random>, <id>";
@@ -40,7 +39,8 @@ public class ArchillectCommand extends Command
 
             if (event.getArgs().isEmpty())
             {
-                archillect.setImage(getLatestImage());
+                archillect.setImage(getLatestImage())
+                        .setDescription("["+id+"]");
                 event.reply(archillect.build());
             }
             else
@@ -106,6 +106,17 @@ public class ArchillectCommand extends Command
     }
 
     /**
+     * Gets the image link of the latest post listed on the Archillect homepage
+     *
+     * @return          a String containing a link to the latest post
+     * @throws IOException
+     */
+    public String getLatestImage() throws IOException
+    {
+        return getImageLink(getPost(id));
+    }
+
+    /**
      * Gets the id of the latest post listed on the Archillect homepage
      * 
      * @return          an Integer with the id of the latest archillect post
@@ -126,17 +137,6 @@ public class ArchillectCommand extends Command
     public String getImageLink(Document doc) throws IOException
     {
         return doc.getElementById("ii").attr("src");
-    }
-
-    /**
-     * Gets the image link of the latest post listed on the Archillect homepage
-     * 
-     * @return          a String containing a link to the latest post
-     * @throws IOException
-     */
-    public String getLatestImage() throws IOException
-    {
-        return getImageLink(getPost(getLatestImageId()));
     }
 
     /**

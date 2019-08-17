@@ -14,19 +14,20 @@ import java.util.Random;
 
 @CommandInfo(
         name = {"Archillect"},
-        description = "Returns the latest Archillect post"
+        description = "Returns the specified Archillect post"
 )
 
 @Author("Elon (stronous)")
 public class ArchillectCommand extends Command
 {
-    private int id = getLatestImageId();
+    private int id;
 
     public ArchillectCommand() throws IOException {
-        this.name = "ar";
-        this.help = "returns the latest, a random archillect post, or one by id";
-        this.arguments = "<random>, <id>";
+        this.name = "archillect";
+        this.help = "returns an archillect post by id (try random); enter nothing for the latest post";
+        this.arguments = "<id>";
         this.guildOnly = false;
+        this.aliases = new String[]{"ar","arch"};
     }
 
     @Override
@@ -113,6 +114,8 @@ public class ArchillectCommand extends Command
      */
     public String getLatestImage() throws IOException
     {
+        id = getLatestImageId();
+
         return getImageLink(getPost(id));
     }
 

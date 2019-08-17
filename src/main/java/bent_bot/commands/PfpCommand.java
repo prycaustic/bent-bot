@@ -14,14 +14,14 @@ import net.dv8tion.jda.api.entities.Member;
 )
 
 @Author("Elon (stronous)")
-public class PfpCommand extends Command {
+public class PfpCommand extends Command
+{
 
     public PfpCommand()
     {
         this.name = "pfp";
         this.help = "returns info the avatar of the specified user";
-        this.guildOnly = false;
-        this.aliases = new String[]{};
+        this.guildOnly = true;
     }
 
     @Override

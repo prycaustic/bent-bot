@@ -1,9 +1,6 @@
 package bent_bot;
 
-import bent_bot.commands.ArabicCommand;
-import bent_bot.commands.InfoCommand;
-import bent_bot.commands.PfpCommand;
-import bent_bot.commands.PingCommand;
+import bent_bot.commands.*;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.command.CommandEvent;
@@ -52,7 +49,12 @@ public class bent_bot
         client.setEmojis("✅", 	"⚠", 	"❌");
 
         //add commands
-        client.addCommands(new PingCommand(), new InfoCommand(), new PfpCommand(), new ShutdownCommand());
+        client.addCommands(
+                new PingCommand(),
+                new InfoCommand(),
+                new PfpCommand(),
+                new ShutdownCommand(),
+                new ArchillectCommand());
 
         //create the help consumer
         Consumer<CommandEvent> helpConsumer = (event) -> {
@@ -105,7 +107,7 @@ public class bent_bot
             else
                 client.setActivity(Activity.playing("Please set a valid activity."));
 
-            jda.addEventListeners(waiter, client.build(), new ArabicCommand());
+            jda.addEventListeners(waiter, client.build(), new SpamListener());
             jda.build();
         }
         catch (LoginException e)

@@ -18,14 +18,14 @@ import static net.dv8tion.jda.api.utils.TimeUtil.getDateTimeString;
 )
 
 @Author("Elon (stronous)")
-public class InfoCommand extends Command {
+public class InfoCommand extends Command
+{
 
     public InfoCommand()
     {
         this.name = "info";
         this.help = "returns info about the specified user";
         this.guildOnly = false;
-        this.aliases = new String[]{};
     }
 
     @Override

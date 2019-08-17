@@ -14,7 +14,7 @@ import java.util.Random;
 
 @CommandInfo(
         name = {"Archillect"},
-        description = "Returns the specified Archillect post"
+        description = "Returns a random or specified Archillect post"
 )
 
 @Author("Elon (stronous)")
@@ -24,7 +24,7 @@ public class ArchillectCommand extends Command
 
     public ArchillectCommand() throws IOException {
         this.name = "archillect";
-        this.help = "returns an archillect post by id (try random); enter nothing for the latest post";
+        this.help = "returns a random or specified archillect post";
         this.arguments = "<id>";
         this.guildOnly = false;
         this.aliases = new String[]{"ar","arch"};
@@ -40,7 +40,7 @@ public class ArchillectCommand extends Command
 
             if (event.getArgs().isEmpty())
             {
-                archillect.setImage(getLatestImage())
+                archillect.setImage(getRandomImage())
                         .setDescription("["+id+"]");
                 event.reply(archillect.build());
             }
@@ -50,12 +50,12 @@ public class ArchillectCommand extends Command
 
                 if (arguments.length > 1)
                 {
-                    event.replyWarning("Please either input an ID or say random.");
+                    event.replyWarning("Please input an ID.");
                     return;
                 }
-                else if (arguments[0].equalsIgnoreCase("random"))
+                else if (arguments[0].equalsIgnoreCase("l"))
                 {
-                    archillect.setImage(getRandomImage())
+                    archillect.setImage(getLatestImage())
                             .setDescription("["+id+"]");
                 }
                 //if they don't want a random post try searching for a post

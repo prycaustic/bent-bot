@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 
 import javax.security.auth.login.LoginException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -22,15 +23,32 @@ import java.util.function.Consumer;
 
 public class bent_bot
 {
+    private static String token;
+    private static String ownerID;
+    private static String prefix;
+    private static String activity;
+    private static String activityMessage;
+
     public static void main(String[] args) throws Exception
     {
-        //finds config.txt
-        List<String> list = Files.readAllLines(Paths.get("config.ini"));
+        try (InputStream in = new FileInputStream("config/config.properties"))
+        {
+            Properties config = new Properties();
 
-        //config variables
-        String token = getConfig("token=", list);
-        String activity = getConfig("activity=", list);
-        String activityMessage = getConfig("activityMessage=", list);
+            //load the properties file
+            config.load(in);
+
+            //get the config properties
+            token = config.getProperty("token");
+            ownerID = config.getProperty("ownerID");
+            prefix = config.getProperty("prefix");
+            activity = config.getProperty("activity");
+            activityMessage = config.getProperty("activityMessage");
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
 
         //define an event waiter
         EventWaiter waiter = new EventWaiter();
@@ -39,11 +57,10 @@ public class bent_bot
         CommandClientBuilder client = new CommandClientBuilder();
 
         //set the bot's prefix
-        client.setPrefix(getConfig("prefix=", list))
-                .setAlternativePrefix("");
+        client.setPrefix(prefix).setAlternativePrefix("");
 
         //set the bot's owner's ID
-        client.setOwnerId(getConfig("ownerID=", list));
+        client.setOwnerId(ownerID);
 
         // sets emojis used throughout the bot on successes, warnings, and failures
         client.setEmojis("✅", 	"⚠", 	"❌");
@@ -53,8 +70,10 @@ public class bent_bot
                 new PingCommand(),
                 new InfoCommand(),
                 new PfpCommand(),
-                new ShutdownCommand(),
-                new ArchillectCommand());
+                new ArchillectCommand(),
+                new NotifyCommand(),
+                new ShutdownCommand()
+        );
 
         //create the help consumer
         Consumer<CommandEvent> helpConsumer = (event) -> {
@@ -107,7 +126,7 @@ public class bent_bot
             else
                 client.setActivity(Activity.playing("Please set a valid activity."));
 
-            jda.addEventListeners(waiter, client.build(), new SpamListener());
+            jda.addEventListeners(waiter, client.build(), new SpamListener(), new NotifyListener());
             jda.build();
         }
         catch (LoginException e)

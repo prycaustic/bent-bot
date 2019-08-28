@@ -21,7 +21,8 @@ public class NotifyListener extends ListenerAdapter
             //load the input stream into the config object
             config.load(in);
 
-            //set default join messages
+            //set defaults
+            config.setProperty(event.getGuild().toString(), event.getGuild().getDefaultChannel().getId());
             config.setProperty(event.getGuild().toString() + ".WELCOME", "USER_NAME has joined the server.");
             config.setProperty(event.getGuild().toString() + ".GOODBYE", "USER_NAME has left the server.");
 
@@ -43,7 +44,8 @@ public class NotifyListener extends ListenerAdapter
         id = config.getProperty(event.getGuild().toString());
         welcomeMessage = config.getProperty(event.getGuild().toString() + ".WELCOME");
 
-        event.getGuild().getTextChannelById(id).sendMessage(welcomeMessage.replaceAll("USER_NAME", event.getMember().getAsMention())).queue();
+        if (id != null)
+            event.getGuild().getTextChannelById(id).sendMessage(welcomeMessage.replaceAll("USER_NAME", event.getMember().getAsMention())).queue();
     }
 
     public void onGuildMemberLeave(GuildMemberLeaveEvent event)
@@ -58,6 +60,7 @@ public class NotifyListener extends ListenerAdapter
         id = config.getProperty(event.getGuild().toString());
         goodbyeMessage = config.getProperty(event.getGuild().toString() + ".GOODBYE");
 
-        event.getGuild().getTextChannelById(id).sendMessage(goodbyeMessage.replaceAll("USER_NAME", "<@"+event.getMember().getId()+">")).queue();
+        if (id != null)
+            event.getGuild().getTextChannelById(id).sendMessage(goodbyeMessage.replaceAll("USER_NAME", "<@"+event.getMember().getId()+">")).queue();
     }
 }

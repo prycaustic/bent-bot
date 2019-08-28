@@ -43,7 +43,7 @@ public class NotifyCommand extends Command
                     if (!event.getMessage().getMentionedChannels().isEmpty()) {
                         //add the welcome channel
                         config.setProperty(event.getGuild().toString(), event.getMessage().getMentionedChannels().get(0).getId());
-                        event.replySuccess("The notification channel has been set.");
+                        event.reactSuccess();
                     } else
                         event.replyWarning("No welcome channel was mentioned.");
 

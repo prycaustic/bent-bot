@@ -15,6 +15,11 @@ public class NotifyListener extends ListenerAdapter
     private String welcomeMessage;
     private String goodbyeMessage;
 
+    /**
+     * Everytime the bot joins a new guild, set all the default variables for that guild
+     *
+     * @param event
+     */
     public void onGuildJoin(GuildJoinEvent event)
     {
         try (InputStream in = new FileInputStream("config/notify.properties")) {
@@ -32,6 +37,11 @@ public class NotifyListener extends ListenerAdapter
         }
     }
 
+    /**
+     * Everytime a new member joins a guild, send the notification
+     *
+     * @param event
+     */
     public void onGuildMemberJoin(GuildMemberJoinEvent event)
     {
         try (FileInputStream in = new FileInputStream("config/notify.properties"))
@@ -48,6 +58,11 @@ public class NotifyListener extends ListenerAdapter
             event.getGuild().getTextChannelById(id).sendMessage(welcomeMessage.replaceAll("USER_NAME", event.getMember().getAsMention())).queue();
     }
 
+    /**
+     * Everytime a member leaves a guild, send the notification
+     *
+     * @param event
+     */
     public void onGuildMemberLeave(GuildMemberLeaveEvent event)
     {
         try (FileInputStream in = new FileInputStream("config/notify.properties"))

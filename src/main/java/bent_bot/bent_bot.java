@@ -7,7 +7,6 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.jagrosh.jdautilities.examples.command.ShutdownCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.ChannelType;
@@ -16,8 +15,6 @@ import net.dv8tion.jda.api.entities.User;
 
 import javax.security.auth.login.LoginException;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -75,41 +72,8 @@ public class bent_bot
                 new ShutdownCommand()
         );
 
-        //create the help consumer
-        Consumer<CommandEvent> helpConsumer = (event) -> {
-            EmbedBuilder helpEmbed = new EmbedBuilder();
-            helpEmbed.setTitle("**Commands**");
-            helpEmbed.setColor(event.isFromType(ChannelType.TEXT) ? event.getMember().getColor() : null);
-            Command.Category category = null;
-            for (Command command : client.build().getCommands())
-            {
-                if (!command.isHidden() && (!command.isOwnerCommand() || event.isOwner()))
-                {
-                    if (!Objects.equals(category, command.getCategory()))
-                    {
-                        category = command.getCategory();
-                        helpEmbed.addField("category", category!=null ? "No Category" : category.getName(), false);
-                    }
-                    helpEmbed.appendDescription("\n**"+client.build().getPrefix() + command.getName()+"**" + " — " + (command.getArguments()==null ? "" : "`"+ command.getArguments()+"` ") + command.getHelp());
-                }
-            }
-            User owner = event.getJDA().getUserById(client.build().getOwnerId());
-            if (owner != null)
-            {
-                if(client.build().getServerInvite()==null)
-                    helpEmbed.setFooter("For additional help, contact " + owner.getName() + "#" + owner.getDiscriminator(), owner.getAvatarUrl());
-                else
-                    helpEmbed.setFooter("For additional help, contact " + owner.getName() + owner.getDiscriminator() + " or join " + client.build().getServerInvite(), owner.getAvatarUrl());
-            }
-            event.replyInDm(helpEmbed.build(), unused ->
-            {
-                if(event.isFromType(ChannelType.TEXT))
-                    event.reactSuccess();
-            }, t -> event.replyWarning("Help cannot be sent because you are blocking Direct Messages."));
-        };
-
         //set the help consumer
-        client.setHelpConsumer(helpConsumer);
+        client.setHelpConsumer(getHelpConsumer(client));
 
         try
         {
@@ -136,29 +100,12 @@ public class bent_bot
         }
     }
 
-    public static String getConfig(String setting, List<String> list)
-    {
-        for (int i = 0; i < list.size(); i++)
-        {
-            if (list.get(i).startsWith(setting))
-            {
-                //remove 'token=' from the string
-                list.set(i, list.get(i).replace(setting,""));
-
-                //set token as the extracted token
-                return list.get(i);
-            }
-        }
-        return "";
-    }
-
-    public static void shutdown(JDA jda)
-    {
-        jda.shutdown();
-        System.out.println("Shut down success...");
-        System.exit(0);
-    }
-
+    /**
+     * Search for a guild member
+     *
+     * @param event     the CommandEvent in which the member is specified
+     * @return          a Member object that matches the search, this can be null
+     */
     public static Member searchGuildForMember(CommandEvent event)
     {
         //sort the list in alphabetical order
@@ -204,6 +151,12 @@ public class bent_bot
         return null;
     }
 
+    /**
+     * find the "targetMember" to use with a command that needs to find a specific member
+     *
+     * @param event     the CommandEvent that needs a targetMember
+     * @return          a Member object to be used in the command
+     */
     public static Member getTargetMember(CommandEvent event)
     {
         //if they mentioned somebody then use them
@@ -223,5 +176,47 @@ public class bent_bot
         else
             return event.getMember();
         return null;
+    }
+
+    /**
+     * this method is just for organization
+     *
+     * @param client        the CommandClientBuilder object which is used in initializing the bot
+     * @return              a Consumer<CommandEvent> object to be used as the helpConsumer
+     */
+    public static Consumer<CommandEvent> getHelpConsumer(CommandClientBuilder client)
+    {
+        return (event) -> {
+            EmbedBuilder helpEmbed = new EmbedBuilder();
+            helpEmbed.setTitle("**Commands**");
+            helpEmbed.setColor(event.isFromType(ChannelType.TEXT) ? event.getMember().getColor() : null);
+            Command.Category category = null;
+
+            for (Command command : client.build().getCommands())
+            {
+                if (!command.isHidden() && (!command.isOwnerCommand() || event.isOwner()))
+                {
+                    if (!Objects.equals(category, command.getCategory()))
+                    {
+                        category = command.getCategory();
+                        helpEmbed.addField("category", category!=null ? "No Category" : category.getName(), false);
+                    }
+                    helpEmbed.appendDescription("\n**"+client.build().getPrefix() + command.getName()+"**" + " — " + (command.getArguments()==null ? "" : "`"+ command.getArguments()+"` ") + command.getHelp());
+                }
+            }
+            User owner = event.getJDA().getUserById(client.build().getOwnerId());
+            if (owner != null)
+            {
+                if(client.build().getServerInvite()==null)
+                    helpEmbed.setFooter("For additional help, contact " + owner.getName() + "#" + owner.getDiscriminator(), owner.getAvatarUrl());
+                else
+                    helpEmbed.setFooter("For additional help, contact " + owner.getName() + owner.getDiscriminator() + " or join " + client.build().getServerInvite(), owner.getAvatarUrl());
+            }
+            event.replyInDm(helpEmbed.build(), unused ->
+            {
+                if(event.isFromType(ChannelType.TEXT))
+                    event.reactSuccess();
+            }, t -> event.replyWarning("Help cannot be sent because you are blocking Direct Messages."));
+        };
     }
 }

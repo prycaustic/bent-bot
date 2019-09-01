@@ -22,7 +22,7 @@ public class ArchillectCommand extends Command
 {
     private int id;
 
-    public ArchillectCommand() throws IOException {
+    public ArchillectCommand() {
         this.name = "archillect";
         this.help = "returns a random or specified archillect post";
         this.arguments = "<id>";
@@ -84,35 +84,29 @@ public class ArchillectCommand extends Command
      * Web scraper to grab the Archillect homepage
      *
      * @return      a Document object containing the Archillect homepage
-     * @throws IOException
      */
-    public Document scraper() throws IOException
+    private Document scraper() throws IOException
     {
-        //get the archillect homepage
-        Document homepage = Jsoup.connect("http://archillect.com/").get();
-
-        return homepage;
+        return Jsoup.connect("http://archillect.com/").get();
     }
 
     /**
      * Gets the subpage of a specific post
      *
      * @param inputId   the id of the desired post
-     * @return          a Document object containing the subpage of the post specified by {@link #getPost(Integer)}
-     * @throws IOException
+     * @return          a Document object containing the subpage of the post specified by {@code inputId}
      */
-    public Document getPost(Integer inputId) throws IOException
+    private Document getPost(Integer inputId) throws IOException
     {
-        return Jsoup.connect("http://archillect.com/" + id).get();
+        return Jsoup.connect("http://archillect.com/" + inputId).get();
     }
 
     /**
      * Gets the image link of the latest post listed on the Archillect homepage
      *
      * @return          a String containing a link to the latest post
-     * @throws IOException
      */
-    public String getLatestImage() throws IOException
+    private String getLatestImage() throws IOException
     {
         id = getLatestImageId();
 
@@ -123,32 +117,29 @@ public class ArchillectCommand extends Command
      * Gets the id of the latest post listed on the Archillect homepage
      * 
      * @return          an Integer with the id of the latest archillect post
-     * @throws IOException
      */
-    public Integer getLatestImageId() throws IOException
+    private Integer getLatestImageId() throws IOException
     {
-        return Integer.parseInt(scraper().getElementById("container").child(0).attr("href").replace("/", ""));
+        return Integer.parseInt(scraper().getElementById("posts").child(0).attr("href").replace("/", ""));
     }
 
     /**
      * Gets the image link from the post with the specified Document objet
      * 
      * @param doc       the Document object of the desired post
-     * @return          a String containing a link to the image in the post specified by {@link #getImageLink(Document doc)}
-     * @throws IOException
+     * @return          a String containing a link to the image in the post specified by {@code doc}
      */
-    public String getImageLink(Document doc) throws IOException
+    private String getImageLink(Document doc)
     {
-        return doc.getElementById("ii").attr("src");
+        return doc.getElementById("imgnav").getElementsByTag("img").attr("src");
     }
 
     /**
      * Gets a random post from http://archillect.com/
      * 
      * @return          a String containing a link to the post with the generated id
-     * @throws IOException
      */
-    public String getRandomImage() throws IOException
+    private String getRandomImage() throws IOException
     {
         Random rand = new Random();
 
@@ -162,10 +153,9 @@ public class ArchillectCommand extends Command
      * Gets an image from Archillect by its id
      * 
      * @param args      the String of arguments from the current event {@link #execute(CommandEvent)} )}
-     * @return          a String containing a link to the post specified by {@link #getImageById(String args)}
-     * @throws IOException
+     * @return          a String containing a link to the post specified by {@code args}
      */
-    public String getImageById(String args) throws IOException
+    private String getImageById(String args) throws IOException
     {
         try {
             id = Integer.parseInt(args);

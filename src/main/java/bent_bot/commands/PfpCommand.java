@@ -20,7 +20,7 @@ public class PfpCommand extends Command
     public PfpCommand()
     {
         this.name = "pfp";
-        this.help = "returns info the avatar of the specified user";
+        this.help = "returns the avatar of the specified user";
         this.guildOnly = true;
     }
 

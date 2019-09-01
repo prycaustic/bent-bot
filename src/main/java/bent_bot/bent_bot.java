@@ -69,7 +69,8 @@ public class bent_bot
                 new PfpCommand(),
                 new ArchillectCommand(),
                 new NotifyCommand(),
-                new ShutdownCommand()
+                new ShutdownCommand(),
+                new GarfieldCommand()
         );
 
         //set the help consumer
@@ -106,23 +107,15 @@ public class bent_bot
      * @param event     the CommandEvent in which the member is specified
      * @return          a Member object that matches the search, this can be null
      */
-    public static Member searchGuildForMember(CommandEvent event)
+    private static Member searchGuildForMember(CommandEvent event)
     {
         //sort the list in alphabetical order
-        List<Member> guildMembers = new ArrayList<>();
+        List<Member> guildMembers = new ArrayList<>(event.getGuild().getMembers());
 
-        for (Member i : event.getGuild().getMembers())
-            guildMembers.add(i);
-
-        Collections.sort(guildMembers, new Comparator<Member>() {
-            @Override
-            public int compare(Member o1, Member o2) {
-                return o1.getEffectiveName().compareToIgnoreCase(o2.getEffectiveName());
-            }
-        });
+        guildMembers.sort((m1, m2) -> m1.getEffectiveName().compareToIgnoreCase(m2.getEffectiveName()));
 
         //trim the string down to just the first argument
-        String firstArg = event.getArgs().substring(event.getArgs().indexOf(" ") + 1, event.getArgs().length());
+        String firstArg = event.getArgs().substring(event.getArgs().indexOf(" ") + 1);
 
         //go through every member in the guild
         for (Member i : guildMembers)
@@ -184,23 +177,17 @@ public class bent_bot
      * @param client        the CommandClientBuilder object which is used in initializing the bot
      * @return              a Consumer<CommandEvent> object to be used as the helpConsumer
      */
-    public static Consumer<CommandEvent> getHelpConsumer(CommandClientBuilder client)
+    private static Consumer<CommandEvent> getHelpConsumer(CommandClientBuilder client)
     {
         return (event) -> {
             EmbedBuilder helpEmbed = new EmbedBuilder();
             helpEmbed.setTitle("**Commands**");
             helpEmbed.setColor(event.isFromType(ChannelType.TEXT) ? event.getMember().getColor() : null);
-            Command.Category category = null;
 
             for (Command command : client.build().getCommands())
             {
                 if (!command.isHidden() && (!command.isOwnerCommand() || event.isOwner()))
                 {
-                    if (!Objects.equals(category, command.getCategory()))
-                    {
-                        category = command.getCategory();
-                        helpEmbed.addField("category", category!=null ? "No Category" : category.getName(), false);
-                    }
                     helpEmbed.appendDescription("\n**"+client.build().getPrefix() + command.getName()+"**" + " — " + (command.getArguments()==null ? "" : "`"+ command.getArguments()+"` ") + command.getHelp());
                 }
             }

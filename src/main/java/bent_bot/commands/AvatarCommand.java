@@ -8,7 +8,6 @@ import com.jagrosh.jdautilities.examples.doc.Author;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 
-import java.awt.*;
 import java.util.Arrays;
 
 @CommandInfo(

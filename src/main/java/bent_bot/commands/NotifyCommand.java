@@ -8,7 +8,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 
 import java.io.*;
-import java.util.Arrays;
 import java.util.Properties;
 
 @CommandInfo(

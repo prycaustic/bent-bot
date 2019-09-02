@@ -8,8 +8,6 @@ import com.jagrosh.jdautilities.examples.doc.Author;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 
-import java.sql.ClientInfoStatus;
-
 import static net.dv8tion.jda.api.utils.TimeUtil.getDateTimeString;
 
 @CommandInfo(

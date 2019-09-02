@@ -13,7 +13,7 @@ import java.util.Random;
 
 @CommandInfo(
         name = {"Garfield"},
-        description = "Returns a random Garfield comic or one specified by date"
+        description = "Returns a random Garfield comic"
 )
 
 
@@ -23,9 +23,11 @@ public class GarfieldCommand extends Command
 
     public GarfieldCommand()
     {
-        this.name = "gfc";
-        this.help = "returns a random garfield comic or one specified by date";
+        this.name = "garfield";
+        this.help = "returns a random Garfield comic";
         this.guildOnly = false;
+        this.aliases = new String[]{"gfc"};
+        this.category = new Category("Fetch");
     }
 
     @Override

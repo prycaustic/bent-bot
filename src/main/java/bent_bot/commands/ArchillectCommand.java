@@ -10,6 +10,7 @@ import org.jsoup.nodes.Document;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Random;
 
 @CommandInfo(
@@ -24,10 +25,10 @@ public class ArchillectCommand extends Command
 
     public ArchillectCommand() {
         this.name = "archillect";
-        this.help = "returns a random or specified archillect post";
-        this.arguments = "<id>";
+        this.help = "returns an Archillect post";
         this.guildOnly = false;
-        this.aliases = new String[]{"ar","arch"};
+        this.aliases = new String[]{"ar"};
+        this.category = new Category("Fetch");
     }
 
     @Override
@@ -44,6 +45,10 @@ public class ArchillectCommand extends Command
                         .setDescription("["+id+"]");
                 event.reply(archillect.build());
             }
+            else if (event.getArgs().equalsIgnoreCase("help"))
+            {
+                sendHelp(event);
+            }
             else
             {
                 String[] arguments = event.getArgs().split("\\s+");
@@ -53,7 +58,7 @@ public class ArchillectCommand extends Command
                     event.replyWarning("Please input an ID.");
                     return;
                 }
-                else if (arguments[0].equalsIgnoreCase("l"))
+                else if (arguments[0].equalsIgnoreCase("l") || arguments[0].equalsIgnoreCase("latest"))
                 {
                     archillect.setImage(getLatestImage())
                             .setDescription("["+id+"]");
@@ -170,5 +175,24 @@ public class ArchillectCommand extends Command
         }
 
         return getImageLink(getPost(id));
+    }
+
+    /**
+     * Send more specific command help
+     *
+     * @param event     the command event
+     */
+    private void sendHelp(CommandEvent event)
+    {
+        EmbedBuilder help = new EmbedBuilder()
+                .setColor(Color.white)
+                .setTitle("Archillect Help");
+
+        help.addField("aliases", Arrays.toString(aliases), false);
+
+        help.addField("id", "``<id>``  --  Search for an Archillect post with the specified ID.", false);
+        help.addField("latest", "``l``  --  Return the latest Archillect post.", false);
+
+        event.reply(help.build());
     }
 }

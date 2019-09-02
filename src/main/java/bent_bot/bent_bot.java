@@ -8,10 +8,7 @@ import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.jagrosh.jdautilities.examples.command.ShutdownCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.ChannelType;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.*;
 
 import javax.security.auth.login.LoginException;
 import java.io.*;
@@ -26,7 +23,7 @@ public class bent_bot
     private static String activity;
     private static String activityMessage;
 
-    public static void main(String[] args) throws Exception
+    public static void main(String[] args)
     {
         try (InputStream in = new FileInputStream("config/config.properties"))
         {
@@ -64,13 +61,13 @@ public class bent_bot
 
         //add commands
         client.addCommands(
+                new AvatarCommand(),
+                new ArchillectCommand(),
+                new GarfieldCommand(),
                 new PingCommand(),
                 new InfoCommand(),
-                new PfpCommand(),
-                new ArchillectCommand(),
                 new NotifyCommand(),
-                new ShutdownCommand(),
-                new GarfieldCommand()
+                new ShutdownCommand()
         );
 
         //set the help consumer
@@ -158,7 +155,7 @@ public class bent_bot
             return event.getEvent().getMessage().getMentionedMembers().get(0);
         }
         //if nobody is mentioned then see if they put in a search query
-        else if (!event.getArgs().isEmpty())
+        else if (!event.getArgs().isEmpty() && !event.getArgs().equalsIgnoreCase("help"))
         {
             if (bent_bot.searchGuildForMember(event) != null)
                 return bent_bot.searchGuildForMember(event);
@@ -166,7 +163,7 @@ public class bent_bot
                 event.replyWarning("Nobody with that name could be found.");
         }
         //if there's no search just do the person who sent the commmand
-        else
+        else if (!event.getArgs().equalsIgnoreCase("help"))
             return event.getMember();
         return null;
     }
@@ -183,11 +180,19 @@ public class bent_bot
             EmbedBuilder helpEmbed = new EmbedBuilder();
             helpEmbed.setTitle("**Commands**");
             helpEmbed.setColor(event.isFromType(ChannelType.TEXT) ? event.getMember().getColor() : null);
+            Command.Category category = null;
+
+            helpEmbed.appendDescription("Type ``<command> help`` for command specific help.");
 
             for (Command command : client.build().getCommands())
             {
                 if (!command.isHidden() && (!command.isOwnerCommand() || event.isOwner()))
                 {
+                    if (!Objects.equals(category, command.getCategory()))
+                    {
+                        category = command.getCategory();
+                        helpEmbed.appendDescription("\n\n  __").appendDescription(category==null ? "No Category" : category.getName()).appendDescription("__:\n");
+                    }
                     helpEmbed.appendDescription("\n**"+client.build().getPrefix() + command.getName()+"**" + " — " + (command.getArguments()==null ? "" : "`"+ command.getArguments()+"` ") + command.getHelp());
                 }
             }

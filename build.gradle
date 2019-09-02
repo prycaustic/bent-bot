@@ -7,7 +7,7 @@ plugins {
 mainClassName = 'bent_bot.bent_bot'
 
 group 'stronous'
-version '0.8.3-SNAPSHOT'
+version '0.8.5-SNAPSHOT'
 
 sourceCompatibility = targetCompatibility = 8
 

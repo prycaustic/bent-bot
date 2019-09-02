@@ -8,23 +8,24 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.Properties;
 
 @CommandInfo(
         name = {"Notify"},
-        description = "Send a message whenever someone joins or leaves the server"
+        description = "Sends a message whenever someone joins or leaves the server"
 )
 
 @Author("Elon (stronous)")
 public class NotifyCommand extends Command
 {
-    public NotifyCommand() throws IOException
+    public NotifyCommand()
     {
         this.name = "notify";
-        this.help = "send a message whenever someone joins or leaves the server";
-        this.arguments = "help";
+        this.help = "server leave / join notifications";
         this.guildOnly = true;
         this.userPermissions = new Permission[]{Permission.ADMINISTRATOR};
+        this.category = new Category("Miscellaneous");
     }
 
     public void execute(CommandEvent event)
@@ -65,7 +66,7 @@ public class NotifyCommand extends Command
                     //check for mentioned channels
                     if (!event.getArgs().isEmpty()) {
                         //set the goodbye message
-                        config.setProperty(event.getGuild() + ".WELCOME", event.getArgs().toString().replaceFirst("welcome ", ""));
+                        config.setProperty(event.getGuild() + ".WELCOME", event.getArgs().replaceFirst("welcome ", ""));
                         event.reactSuccess();
                     } else
                         event.replyWarning("No welcome message was entered.");
@@ -88,7 +89,7 @@ public class NotifyCommand extends Command
                     //check for mentioned channels
                     if (!event.getArgs().isEmpty()) {
                         //set the goodbye message
-                        config.setProperty(event.getGuild() + ".GOODBYE", event.getArgs().toString().replaceFirst("goodbye ", ""));
+                        config.setProperty(event.getGuild() + ".GOODBYE", event.getArgs().replaceFirst("goodbye ", ""));
                         event.reactSuccess();
                     } else
                         event.replyWarning("No goodbye message was entered.");
@@ -111,16 +112,16 @@ public class NotifyCommand extends Command
 
     }
 
-    public void sendHelp(CommandEvent event)
+    private void sendHelp(CommandEvent event)
     {
         EmbedBuilder help = new EmbedBuilder()
                 .setColor(event.getMember().getColor())
                 .setTitle("Notification Help");
 
-        help.addField("set", "``set <channel>`` This sets the notification channel.", false);
-        help.addField("welcome", "``welcome <message>`` This sets the welcome message and will be sent " +
+        help.addField("set", "``set <channel>``  --  This sets the notification channel.", false);
+        help.addField("welcome", "``welcome <message>``  --  This sets the welcome message and will be sent " +
                 "everytime someone new joins the server (use USER_NAME to mention the new member).", false);
-        help.addField("goodbye", "``goodbye <message>`` This sets the goodbye message and will be sent " +
+        help.addField("goodbye", "``goodbye <message>``  --  This sets the goodbye message and will be sent " +
                 "everytime someone leaves the server (use USER_NAME as before).", false);
 
         event.reply(help.build());

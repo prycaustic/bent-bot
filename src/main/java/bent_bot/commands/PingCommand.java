@@ -20,6 +20,7 @@ public class PingCommand extends Command
         this.name = "ping";
         this.help = "checks the bot's latency";
         this.guildOnly = false;
+        this.category = new Category("Miscellaneous");
     }
 
     @Override

@@ -1,6 +1,7 @@
 package bent_bot;
 
 import bent_bot.commands.*;
+import bent_bot.commands.warframe.wfNewsCommand;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.command.CommandEvent;
@@ -67,6 +68,8 @@ public class bent_bot
                 new PingCommand(),
                 new InfoCommand(),
                 new NotifyCommand(),
+                new wfNewsCommand(),
+                new CatCommand(),
                 new ShutdownCommand()
         );
 

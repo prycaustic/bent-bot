@@ -37,7 +37,8 @@ public class ArchillectCommand extends Command
         try {
             EmbedBuilder archillect = new EmbedBuilder()
                     .setColor(Color.white)
-                    .setTitle("Archillect");
+                    .setTitle("Archillect")
+                    .setFooter("via http://archillect.com/", "http://archillect.com/img/archillect.png");
 
             if (event.getArgs().isEmpty())
             {
@@ -92,7 +93,7 @@ public class ArchillectCommand extends Command
      */
     private Document scraper() throws IOException
     {
-        return Jsoup.connect("http://archillect.com/").get();
+        return Jsoup.connect("http://archillect.com/archive/").get();
     }
 
     /**
@@ -125,7 +126,7 @@ public class ArchillectCommand extends Command
      */
     private Integer getLatestImageId() throws IOException
     {
-        return Integer.parseInt(scraper().getElementById("posts").child(0).attr("href").replace("/", ""));
+        return Integer.parseInt(scraper().getElementById("archive").child(0).attr("href").substring(1));
     }
 
     /**

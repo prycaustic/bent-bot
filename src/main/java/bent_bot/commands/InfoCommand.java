@@ -8,6 +8,8 @@ import com.jagrosh.jdautilities.examples.doc.Author;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 
+import java.util.Arrays;
+
 import static net.dv8tion.jda.api.utils.TimeUtil.getDateTimeString;
 
 @CommandInfo(
@@ -70,5 +72,22 @@ public class InfoCommand extends Command
 
             event.reply(infoEmbed.build());
         }
+        else
+        {
+            sendHelp(event);
+        }
+    }
+
+    private void sendHelp(CommandEvent event)
+    {
+        EmbedBuilder help = new EmbedBuilder()
+                .setColor(event.getMember().getColor())
+                .setTitle("Info Help");
+
+        help.addField("aliases", Arrays.toString(aliases), false);
+
+        help.addField("search", "``<name>``  --  Search for a user's info or leave empty for your own.", false);
+
+        event.reply(help.build());
     }
 }

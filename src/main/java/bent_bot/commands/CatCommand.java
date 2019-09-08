@@ -28,7 +28,7 @@ public class CatCommand extends Command
         this.help = "returns cat";
         this.aliases = new String[]{"cat"};
         this.guildOnly = false;
-        this.category = new Category("CAT");
+        this.category = new Category("Miscellaneous");
     }
 
     @Override

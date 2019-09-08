@@ -7,7 +7,7 @@ plugins {
 mainClassName = 'bent_bot.bent_bot'
 
 group 'stronous'
-version '0.8.3-SNAPSHOT'
+version '0.9-SNAPSHOT'
 
 sourceCompatibility = targetCompatibility = 8
 
@@ -23,6 +23,7 @@ dependencies {
     // jsoup HTML parser library @ https://jsoup.org/
     compile 'org.jsoup:jsoup:1.12.1'
     implementation 'com.google.code.gson:gson:2.8.5'
+    compile 'org.apache.commons:commons-lang3:3.6'
 }
 
 compileJava.options.encoding = 'UTF-8'

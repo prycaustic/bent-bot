@@ -1,7 +1,7 @@
 package bent_bot;
 
 import bent_bot.commands.*;
-import bent_bot.commands.warframe.wfNewsCommand;
+import bent_bot.commands.warframe.*;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.command.CommandEvent;
@@ -9,11 +9,19 @@ import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.jagrosh.jdautilities.examples.command.ShutdownCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.User;
 
 import javax.security.auth.login.LoginException;
-import java.io.*;
-import java.util.*;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Properties;
 import java.util.function.Consumer;
 
 public class bent_bot
@@ -65,11 +73,14 @@ public class bent_bot
                 new AvatarCommand(),
                 new ArchillectCommand(),
                 new GarfieldCommand(),
-                new PingCommand(),
                 new InfoCommand(),
+                new PingCommand(),
                 new NotifyCommand(),
-                new wfNewsCommand(),
                 new CatCommand(),
+                new wfNewsCommand(waiter),
+                new wfEarthCycleCommand(),
+                new wfCetusCycleCommand(),
+                new wfVallisCycleCommand(),
                 new ShutdownCommand()
         );
 

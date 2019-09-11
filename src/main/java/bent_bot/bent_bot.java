@@ -81,6 +81,7 @@ public class bent_bot
                 new wfEarthCycleCommand(),
                 new wfCetusCycleCommand(),
                 new wfVallisCycleCommand(),
+                new wfWikiCommand(),
                 new ShutdownCommand()
         );
 

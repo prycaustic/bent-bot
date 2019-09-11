@@ -2,6 +2,8 @@ package bent_bot.commands.warframe;
 
 import com.google.gson.JsonObject;
 import com.jagrosh.jdautilities.command.Command;
+import com.jagrosh.jdautilities.doc.standard.CommandInfo;
+import com.jagrosh.jdautilities.examples.doc.Author;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import org.apache.commons.lang3.StringUtils;
@@ -12,6 +14,12 @@ import java.time.temporal.ChronoUnit;
 
 import static bent_bot.commands.warframe.wfNewsCommand.connect;
 
+@CommandInfo(
+        name = {"Cycle"},
+        description = "Returns a cycle"
+)
+
+@Author("Elon (stronous)")
 abstract class wfCycleCommand extends Command
 {
     MessageEmbed getCycleEmbed(String cycleType, String title)

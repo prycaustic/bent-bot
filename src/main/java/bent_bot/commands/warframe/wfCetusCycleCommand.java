@@ -14,7 +14,7 @@ public class wfCetusCycleCommand extends wfCycleCommand
 {
     public wfCetusCycleCommand()
     {
-        this.name = "wfCetusCycle";
+        this.name = "wfcetus";
         this.help = "returns the current cetus cycle";
         this.guildOnly = false;
         this.aliases = new String[]{"wfcc", "cc"};

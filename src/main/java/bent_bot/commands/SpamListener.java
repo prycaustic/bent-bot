@@ -11,7 +11,7 @@ public class SpamListener extends ListenerAdapter
     {
         Random random = new Random();
 
-        if (!event.getAuthor().isBot() && random.nextDouble() < .0000001)
+        if (!event.getAuthor().isBot() && random.nextDouble() < .0001)
         {
                 event.getChannel().sendMessage(getSpam()).queue();
         }

@@ -2,6 +2,7 @@ package bent_bot.commands.warframe;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -14,13 +15,16 @@ import java.util.List;
 
 public class wfWikiCommand extends Command
 {
-    public wfWikiCommand()
+    private EventWaiter waiter;
+
+    public wfWikiCommand(EventWaiter waiter)
     {
         this.name = "wfwiki";
         this.help = "returns the wiki page for the search term";
         this.guildOnly = false;
         this.aliases = new String[]{"wfw", "ws"};
         this.category = new Category("Warframe");
+        this.waiter = waiter;
     }
 
     @Override
@@ -28,7 +32,7 @@ public class wfWikiCommand extends Command
     {
         try {
             String query = event.getArgs().contains(" ") ? event.getArgs().substring(0, event.getArgs().indexOf(" ")) : event.getArgs();
-            String psearch = "https://warframe.fandom.com/api.php?format=xml&action=query&generator=allpages&gaplimit=50&gapfrom=" + query + "&prop=info&inprop=url";
+            String psearch = "https://warframe.fandom.com/api.php?format=xml&action=query&generator=allpages&gaplimit=75&gapfrom=" + query + "&prop=info&inprop=url";
 
             Document wiki = Jsoup.connect(psearch).get();
 
@@ -96,45 +100,55 @@ public class wfWikiCommand extends Command
                     for (Element i : drops)
                     {
                         String fieldName = i.getElementsByTag("td").get(0).text();
-                        StringBuilder fieldText = new StringBuilder(i.getElementsByTag("span").get(0).attr("title"));
-                        for (Element j : i.getElementsByTag("span"))
+                        StringBuilder fieldText = new StringBuilder();
+                        if (!i.getElementsByTag("span").isEmpty())
                         {
-                            fieldText.append("\n").append(j.text());
+                            for (Element j : i.getElementsByTag("span"))
+                            {
+                                fieldText.append("\n").append(j.text());
+                            }
                         }
-                        fieldText.replace(0, 1, "");
+                        else
+                        {
+                            fieldText.append(i.text());
+                        }
                         wikiEmbed.addField(fieldName, fieldText.toString(), true);
                     }
                 }
 
                 //check for emod table
-                if (!wikiPage.getElementsByClass("emodtable").isEmpty())
-                {
+                if (!wikiPage.getElementsByClass("emodtable").isEmpty()) {
                     Elements components = wikiPage.getElementsByClass("emodtable").get(0).getElementsByTag("tbody").get(0).getElementsByTag("tr");
-                    StringBuilder common = new StringBuilder();
-                    StringBuilder uncommon = new StringBuilder();
-                    StringBuilder rare = new StringBuilder();
-                    for (int i = 1; i < 9; i++)
+                    if (wikiPage.getElementsByAttributeValue("data-tracking", "categories-top-1").text().equals("Relic"))
                     {
-                        Elements td = components.get(i).getElementsByTag("td");
-                        if (!td.get(0).text().equals(""))
+                        Elements td = components.get(1).getElementsByTag("td");
+                        if (td.size() > 3)
                         {
-                            if (i < 4)
-                                common.append(td.get(0).text()).append("\n");
-                            else if (i < 6)
-                                uncommon.append(td.get(0).text()).append("\n");
-                            else
-                                rare.append(td.get(0).text()).append("\n");
+                            StringBuilder common = new StringBuilder();
+                            StringBuilder uncommon = new StringBuilder();
+                            StringBuilder rare = new StringBuilder();
+                            for (int i = 1; i < 9; i++)
+                            {
+                                td = components.get(i).getElementsByTag("td");
+                                if (!td.get(0).text().equals("")) {
+                                    if (i < 5)
+                                        common.append(td.get(0).text()).append("\n");
+                                    else if (i < 8)
+                                        uncommon.append(td.get(0).text()).append("\n");
+                                    else
+                                        rare.append(td.get(0).text()).append("\n");
+                                }
+                            }
+                            wikiEmbed.addField("Common", common.toString(), false);
+                            wikiEmbed.addField("Uncommon", uncommon.toString(), false);
+                            wikiEmbed.addField("Rare", rare.toString(), false);
                         }
                     }
-                    wikiEmbed.addField("Common", common.toString(), false);
-                    wikiEmbed.addField("Uncommon", uncommon.toString(), false);
-                    wikiEmbed.addField("Rare", rare.toString(), false);
                 }
 
                 //check for drop chances
-                if (!wikiPage.getElementsByClass("emodtable").isEmpty())
+                if (!wikiPage.getElementsByAttributeValue("data-expandtext", "Drop Locations").isEmpty())
                 {
-
                     Elements drops = wikiPage.getElementsByAttributeValue("data-expandtext", "Drop Locations").get(0).getElementsByTag("tbody").get(0).getElementsByTag("tr");
                     StringBuilder desc = new StringBuilder();
                     for (int i = 1; i < drops.size(); i++)

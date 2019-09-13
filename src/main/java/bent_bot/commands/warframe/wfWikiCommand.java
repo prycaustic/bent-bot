@@ -174,9 +174,12 @@ public class wfWikiCommand extends Command
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    wikiEmbed.clearFields();
-                    wikiEmbed.appendDescription("\n*This message has been trimmed to save space.*");
-                    m.editMessage(wikiEmbed.build()).queue();
+                    if (!wikiEmbed.getFields().isEmpty())
+                    {
+                        wikiEmbed.clearFields();
+                        wikiEmbed.appendDescription("\n*This message has been trimmed to save space.*");
+                        m.editMessage(wikiEmbed.build()).queue();
+                    }
                 });
             } catch (Exception e) {
                 event.replyError("No page found.");

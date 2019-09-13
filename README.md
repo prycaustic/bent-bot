@@ -9,7 +9,7 @@
   </a>
  
 
-  <a href="https://github.com/Stronous/bent-bot/LICENSE">
+  <a href="https://github.com/Stronous/bent-bot/blob/master/LICENSE">
    <img src="https://img.shields.io/github/license/stronous/bent-bot?logo=Apache">
   </a>
 
@@ -22,8 +22,4 @@
 # bent-bot
  A Discord bot made with JDA, JDA-Utilities, gradle.
  
- This bot was made for a small server and is primarily meant to just be used in there. However, if you so wish you may invite it to your own server with the link above. As well, I've provided all the files necessary to run your own instance of the bot.
- 
- ### COMMANDS
- 
- Most of these are very basic commands, and there are also more specific commands for warframe.
+ This bot was made for a small server I'm in and is primarily meant to just be used in there. However, if you so wish you may invite it to your own server with the link above. As well, I've provided all the files necessary to run your own instance of the bot.

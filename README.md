@@ -45,7 +45,7 @@
   You actually want to help and add more to this throwaway bot? Sure, just create a pull request.
   
   
-### TO DO
+### TO DO (since release)
 - [ ] Add option to enable and disable notifications
 - [ ] Fix minor warframe wiki command bugs
 - [ ] Enjoy

@@ -46,6 +46,8 @@
   
   
 ### TO DO
+- [ ] Add option to enable and disable notifications
+- [ ] Fix minor warframe wiki command bugs
 - [ ] Enjoy
 
 <br>

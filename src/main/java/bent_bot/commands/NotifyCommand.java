@@ -113,16 +113,26 @@ public class NotifyCommand extends Command
 
     private void sendHelp(CommandEvent event)
     {
-        EmbedBuilder help = new EmbedBuilder()
-                .setColor(event.getMember().getColor())
-                .setTitle("Notification Help");
+        try {
+            FileInputStream in = new FileInputStream("config/notify.properties");
+            Properties prop = new Properties();
+            prop.load(in);
+            String channelId = prop.getProperty(event.getGuild().toString());
+            EmbedBuilder help = new EmbedBuilder()
+                    .setColor(event.getMember().getColor())
+                    .setTitle("Notification Help");
 
-        help.addField("set", "``set <channel>``  --  This sets the notification channel.", false);
-        help.addField("welcome", "``welcome <message>``  --  This sets the welcome message and will be sent " +
-                "everytime someone new joins the server (use USER_NAME to mention the new member).", false);
-        help.addField("goodbye", "``goodbye <message>``  --  This sets the goodbye message and will be sent " +
-                "everytime someone leaves the server (use USER_NAME as before).", false);
+            help.appendDescription("If you would like to disable the notifications, simply set the channel to ``null``." +
+                    "\nThe current notification channel is set to " + (channelId != null ? "#"+event.getGuild().getGuildChannelById(channelId).getName() : "null") + ".");
+            help.addField("set", "``set <channel>``  --  This sets the notification channel.", false);
+            help.addField("welcome", "``welcome <message>``  --  This sets the welcome message and will be sent " +
+                    "everytime someone new joins the server (use USER_NAME to mention the new member).", false);
+            help.addField("goodbye", "``goodbye <message>``  --  This sets the goodbye message and will be sent " +
+                    "everytime someone leaves the server (use USER_NAME as before).", false);
 
-        event.reply(help.build());
+            event.reply(help.build());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

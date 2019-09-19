@@ -12,13 +12,10 @@ public class NotifyListener extends ListenerAdapter
 {
     private Properties config = new Properties();
     private String id;
-    private String welcomeMessage;
-    private String goodbyeMessage;
 
     /**
      * Everytime the bot joins a new guild, set all the default variables for that guild
      *
-     * @param event
      */
     public void onGuildJoin(GuildJoinEvent event)
     {
@@ -40,7 +37,6 @@ public class NotifyListener extends ListenerAdapter
     /**
      * Everytime a new member joins a guild, send the notification
      *
-     * @param event
      */
     public void onGuildMemberJoin(GuildMemberJoinEvent event)
     {
@@ -52,7 +48,9 @@ public class NotifyListener extends ListenerAdapter
         }
 
         id = config.getProperty(event.getGuild().toString());
-        welcomeMessage = config.getProperty(event.getGuild().toString() + ".WELCOME");
+        String welcomeMessage = config.getProperty(event.getGuild().toString() + ".WELCOME");
+        if (welcomeMessage == null)
+                welcomeMessage = "USER_NAME joined the server.";
 
         if (id != null)
             event.getGuild().getTextChannelById(id).sendMessage(welcomeMessage.replaceAll("USER_NAME", event.getMember().getAsMention())).queue();
@@ -61,7 +59,6 @@ public class NotifyListener extends ListenerAdapter
     /**
      * Everytime a member leaves a guild, send the notification
      *
-     * @param event
      */
     public void onGuildMemberLeave(GuildMemberLeaveEvent event)
     {
@@ -73,7 +70,9 @@ public class NotifyListener extends ListenerAdapter
         }
 
         id = config.getProperty(event.getGuild().toString());
-        goodbyeMessage = config.getProperty(event.getGuild().toString() + ".GOODBYE");
+        String goodbyeMessage = config.getProperty(event.getGuild().toString() + ".GOODBYE");
+        if (goodbyeMessage == null)
+            goodbyeMessage = "USER_NAME left the server.";
 
         if (id != null)
             event.getGuild().getTextChannelById(id).sendMessage(goodbyeMessage.replaceAll("USER_NAME", "<@"+event.getMember().getId()+">")).queue();

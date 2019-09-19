@@ -46,7 +46,7 @@
   
   
 ### TO DO (since release)
-- [ ] Add option to enable and disable notifications
+- [x] Add option to enable and disable notifications
 - [ ] Fix minor warframe wiki command bugs
 - [ ] Possible Adventure Quest Worlds wiki search command
 - [ ] Enjoy

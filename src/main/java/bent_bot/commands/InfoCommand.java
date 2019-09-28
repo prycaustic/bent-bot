@@ -27,6 +27,7 @@ public class InfoCommand extends Command
         this.help = "returns info about the specified user";
         this.guildOnly = false;
         this.category = new Category("Miscellaneous");
+        this.guildOnly = true;
     }
 
     @Override

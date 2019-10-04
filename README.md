@@ -49,6 +49,7 @@
 - [x] Add option to enable and disable notifications
 - [x] Fix minor warframe wiki command bugs
 - [ ] ~~Possible Adventure Quest Worlds wiki search command~~ doesn't seem to be possible :(
+- [ ] Google Image search
 - [ ] Enjoy
 
 <br>

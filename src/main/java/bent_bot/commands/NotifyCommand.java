@@ -128,7 +128,7 @@ public class NotifyCommand extends Command
             help.addField("welcome", "``welcome <message>``  --  This sets the welcome message and will be sent " +
                     "everytime someone new joins the server (use USER_NAME to mention the new member).", false);
             help.addField("goodbye", "``goodbye <message>``  --  This sets the goodbye message and will be sent " +
-                    "everytime someone leaves the server (use USER_NAME as before).", false);
+                    "everytime someone leaves the server (USER_NAME will not mention the person here).", false);
 
             event.reply(help.build());
         } catch (IOException e) {

@@ -75,6 +75,6 @@ public class NotifyListener extends ListenerAdapter
             goodbyeMessage = "USER_NAME left the server.";
 
         if (id != null)
-            event.getGuild().getTextChannelById(id).sendMessage(goodbyeMessage.replaceAll("USER_NAME", "<@"+event.getMember().getId()+">")).queue();
+            event.getGuild().getTextChannelById(id).sendMessage(goodbyeMessage.replaceAll("USER_NAME", event.getUser().getName())).queue();
     }
 }
